@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <title>待办清单</title>
+        <style>
+            .todo-item {·
+                margin: 6px 0;
+                cursor: pointer;
+            }
+            .todo-item.done span {
+                text-decoration: line-through;
+                color: #999;
+            }
+            .del {
+                margin-left: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <input id="todo-input" placeholder="输入待办" />
+        <button id="add-btn">添加</button>
+        <ul id="todo-list"></ul>
+
+        <script>
+            const input = document.querySelector("#todo-input");
+            const addBtn = document.querySelector("#add-btn");
+            const list = document.querySelector("#todo-list");
+            let nextId = 1;
+            function addTodo() {
+                const text = input.value.trim();
+                if (!text) return;
+                const fragment = document.createDocumentFragment();
+
+                const li = document.createElement("li");
+                li.className = "todo-item";
+                li.dataset.id = nextId++;
+
+                const span = document.createElement("span");
+                span.textContent = text;
+
+                const del = document.createElement("button");
+                del.textContent = "删除"; // 防止 xss
+                del.className = "del";
+
+                li.append(span, del);
+
+                list.append(li);
+                input.value = "";
+                input.focus();
+            }
+            addBtn.addEventListener('click', addTodo);
+            input.addEventListener('keydown',(e) => {
+                if (e.key === 'Enter') addTodo();
+            })
+
+            // 事件委托
+            list.addEventListener('click', (event) => {
+                const item = event.target.closest('li.todo-item');
+
+                if (! item || !list.contains(item)){
+                    // console.log("选中项ID:", item.dataset.id);
+                    return ;
+                }
+                if (event.target.closest('.del')){
+                    item.remove();
+                }else{
+                    item.classList.toggle("done");
+                    // classList 用来读取和操作这个元素的class列表; 
+                    // toggle是切换类，若item有done这个类就移除, 没有就添加
+                }
+            })
+        </script>
+    </body>
+</html>
