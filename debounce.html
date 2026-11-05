@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh">
+    <head>
+        <meta charset="UTF-8" />
+        <title>防抖搜索</title>
+    </head>
+    <body>
+        <input id="search" placeholder="搜索水果，如 an" />
+        <p id="count"></p>
+        <ul id="result"></ul>
+
+        <script>
+            const fruits = [
+                "Apple",
+                "Banana",
+                "Orange",
+                "Mango",
+                "Grape",
+                "Pineapple",
+                "Strawberry",
+                "Watermelon",
+                "Peach",
+                "Cherry",
+            ];
+            const search = document.querySelector("#search");
+            const result = document.querySelector("#result");
+            const count = document.querySelector("#count");
+            function debounce(fn, delay = 300) {
+                let timer = null; // 闭包, 后续return function 里会调用 timer, 所以 会保留
+                return function (...args) {
+                    clearTimeout(timer); // 取消延迟定时器
+                    timer = setTimeout(() => { // 开启定时器，const timeId = setTimeout(要执行的函数, 延迟毫秒数)
+                        fn.apply(this, args); // 借壳调用函数，强行指定函数内部的 this 指向谁，并把一个数组拆开作为参数传给他
+                    });
+                };
+            }
+            
+        </script>
+    </body>
+</html>
