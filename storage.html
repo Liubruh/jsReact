@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <title>存储练习</title>
+  <style>
+    body { background: #fff; color: #222; transition: .3s; }
+    body.dark { background: #222; color: #eee; }
+  </style>
+</head>
+<body>
+  <button id="theme-btn">切换主题</button>
+  <hr>
+  <button id="minus">-</button>
+  <span id="count">0</span>
+  <button id="plus">+</button>
+
+  <script>
+    const themeBtn = document.querySelector("#theme-btn");
+    const countEl = document.querySelector("#count");
+
+    if (localStorage.getItem("theme") === "dark"){
+        document.body.classList.add("dark");
+    }
+    themeBtn.addEventListener("click", () => {
+        const isDark = document.body.classList.toggle("dark");
+        localStorage.setItem("theme", isDark ? "dark": "light");
+    })
+
+    // 计数器， session 是临时保存，关闭浏览器或者tab页就会销毁，但是local是长期保存，只有使用指令才能删除掉
+    let count = Number(sessionStorage.getItem("count")?? 0);
+    countEl.textContent = count;
+
+    function update(n){
+        count = n;
+        countEl.textContent = count;
+        sessionStorage.setItem("count", count);
+    }
+    
+    document.querySelector("#plus").addEventListener("click", () => update(count + 1));
+    document.querySelector("#minus").addEventListener("click", () => update(count - 1));
+  </script>
+</body>
+</html>

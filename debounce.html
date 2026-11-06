@@ -29,12 +29,45 @@
                 let timer = null; // 闭包, 后续return function 里会调用 timer, 所以 会保留
                 return function (...args) {
                     clearTimeout(timer); // 取消延迟定时器
-                    timer = setTimeout(() => { // 开启定时器，const timeId = setTimeout(要执行的函数, 延迟毫秒数)
+                    timer = setTimeout(() => {
+                        // 开启定时器，const timeId = setTimeout(要执行的函数, 延迟毫秒数)
                         fn.apply(this, args); // 借壳调用函数，强行指定函数内部的 this 指向谁，并把一个数组拆开作为参数传给他
                     });
                 };
             }
-            
+
+            function render(keyword) {
+                const kw = keyword.trim().toLowerCase();
+                const matched = fruits.filter((f) =>
+                    f.toLowerCase().includes(kw),
+                );
+
+                result.replaceChildren(); // 清空旧列表
+                count.textContent = `共${matched.length}}条`;
+
+                if (matched.length === 0) {
+                    const li = document.createElement("li");
+                    li.textContent = "没有匹配结果";
+                    result.append(li);
+                    return;
+                }
+
+                const fragment = document.createDocumentFragment();
+                matched.forEach((name) => {
+                    const li = document.createElement("li");
+                    li.textContent = name;
+                    fragment.append(li);
+                });
+                result.append(fragment);
+            }
+            render("");
+            search.addEventListener(
+                "input",
+                debounce((e) => render(e.target.value), 300),
+            ); // e 指 浏览器自动生成并传入的"事件对象"
+            // e 指 事件本身， 记录了时间发生的时间、类型、当前输入的字符等信息
+            // e.target 指 事件的目标元素， 也就是 input 元素
+            // e.target.value 指 input 元素的 value 属性，也就是当前输入的字符
         </script>
     </body>
 </html>
